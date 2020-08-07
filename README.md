@@ -1,15 +1,23 @@
-# VestaCP-Nginx-Template-for-NodeJS
-Create custom template for NodeJS Application when using Nginx as reverse proxy on VestaCP with custom port. This is done by modifying scriot /usr/local/vesta/bin/v-change-web-domain-proxy-tpl
+# VestaCPWithNodeJS
+Create custom template for NodeJS Application when using Nginx as reverse proxy on VestaCP with custom port, and deploy from github, with possibilite of .env file personal. For this you don't can modificaste originals bins. But you can modify template for personalize buttons for pull.
 
-### Step-by-step
-1. Create backup of current __v-change-web-domain-proxy-tpl__ (it's located in /usr/local/vesta/bin)
+### Install Manual
+1. Copy bins __[v-pull-node](/bin/v-pull-node)__ and __[v-reload-node](/bin/v-reload-node)__ to /usr/local/vesta/bin
+2.  You need to give permissions to the bins you copied above, run:
+```bash
+chmod 755 -R /usr/local/vesta/bin/v-pull-node && chmod 755 -R /usr/local/vesta/bin/v-reload-node
+```
+3. Copy files __[node.tpl](/node.tpl)__, __[node.stpl](/node.stpl)__, __[v-pull-node](/bin/v-pull-node)__ and folder __[node](/node)__ into __/usr/local/vesta/data/templates/web/nginx/__
+4.  You need to give permissions to the models you copied above, run:
+```bash
+chmod 755 -R /usr/local/vesta/data/templates/web/nginx/node*
+```
 2. Replace it with __v-change-web-domain-proxy-tpl__ provided in this repo. (I also provided my backup in this repo ___v-change-web-domain-proxy-tpl.old___)
 3. Create file {DOMAIN}.port.conf in domain's conf folder, change {DOMAIN} with your domain
 4. add this line into {DOMAIN}.port.conf, change {PORT} with your desired port
 ```bash
 nodejs_port={PORT}
 ```
-5. Copy __nodejs.tpl__ and __nodejs.stpl__ into __/usr/local/vesta/data/templates/web/nginx/__
 6. run __/usr/local/vesta/bin/v-change-web-domain-proxy-tpl USER DOMAIN TEMPLATES__ 
 7. or simply update domain proxy templates from VestaCP GUI and click SAVE 
 
