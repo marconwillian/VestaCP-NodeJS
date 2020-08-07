@@ -1,7 +1,7 @@
 # VestaCPWithNodeJS
 Create custom template for NodeJS Application when using Nginx as reverse proxy on VestaCP with custom port, and deploy from github, with possibilite of .env file personal. For this you don't can modificaste originals bins. But you can modify template for personalize buttons for pull.
 
-### Install Manual
+## Install Manual
 1. Copy bins __[v-pull-node](/bin/v-pull-node)__ and __[v-reload-node](/bin/v-reload-node)__ to /usr/local/vesta/bin
 2.  You need to give permissions to the bins you copied above, run:
 ```bash
@@ -12,24 +12,89 @@ chmod 755 -R /usr/local/vesta/bin/v-pull-node && chmod 755 -R /usr/local/vesta/b
 ```bash
 chmod 755 -R /usr/local/vesta/data/templates/web/nginx/node*
 ```
-5. Replace it with __v-change-web-domain-proxy-tpl__ provided in this repo. (I also provided my backup in this repo ___v-change-web-domain-proxy-tpl.old___)
-3. Create file {DOMAIN}.port.conf in domain's conf folder, change {DOMAIN} with your domain
-4. add this line into {DOMAIN}.port.conf, change {PORT} with your desired port
+5. Copy folders __[pull](/pull/node/index.php)__ and __[reload](/reload/node/index.php)__ into __/usr/local/vesta/web/__
+6. Replace __/usr/local/vesta/web/templates/admin/list_web.html__ per __[list_web.html](/web/templates/admin/list_web.html)__
+7. Replace __/usr/local/vesta/web/templates/user/list_web.html__ per __[list_web.html](/web/templates/user/list_web.html)__
+8. You need install pm2 package, you can run:
 ```bash
-nodejs_port={PORT}
+npm install pm2 -global
 ```
-6. run __/usr/local/vesta/bin/v-change-web-domain-proxy-tpl USER DOMAIN TEMPLATES__ 
-7. or simply update domain proxy templates from VestaCP GUI and click SAVE 
-
-### Example in my case
-1. My domain is __cadaver.vm__ , my Port is __3000__ , and my username is __admin__
-2. From step 3 Step-by-step, I created file __cadaver.vm.port.conf__ in __/home/admin/conf/web/__ (Full path : __/home/admin/conf/web/cadaver.vm.port.conf__)
-3. __/home/admin/conf/web/cadaver.vm.port.conf__'s content is:
+or 
 ```bash
-nodejs_port=3000
+yarn add pm2 -global
 ```
-4. Done
 
-### Note
-- v-change-web-domain-proxy-tpl is VestaCP cli executed when VestaCP rebuild web proxy
-- if VestaCP is updated (i.e. yum update), perhaps v-change-web-domain-proxy-tpl will be reverted to default one provided by Vesta, I can't confirm it yet but in case this happen you need to replace it again
+___Obs.___ _For you can deploy from github, you repo need is public or you can put a key .ssh in your user of VestaCP._
+
+## Start Application
+1. Add your domain, in my example I use __marconwillian.dev__.
+2. Crate a file config on __node.config__, Ex.: __/home/projetos/web/{domain}/node.config__, In my case __/home/projetos/web/marconwillian.dev/node.config__.
+3. You can create 1 or more process in this file. You must leave all fields, even if blank, all paths must be terminated with __/__
+4. My model is:
+```bash
+---
+git=git@github.com:marconwillian/BeTheHero.git
+path=BeTheHero/
+has-env=yes
+env-name-from=server.env
+env-name-to=.env
+pre=cd backend/ && yarn install
+name=@bethehero/server
+pwd=BeTheHero/backend/
+script=src/server.js
+port=3007
+base-route=/
+
+```
+Or can put 2 ou more process too:
+```bash
+---
+git=git@github.com:marconwillian/BeTheHero.git
+path=BeTheHero/
+has-env=yes
+env-name-from=server.env
+env-name-to=.env
+pre=cd backend/ && yarn install
+name=@bethehero/server
+pwd=BeTheHero/backend/
+script=src/server.js
+port=3007
+base-route=/
+---
+git=
+path=
+has-env=no
+env-name-from=
+env-name-to=
+pre=cd frontend/ && yarn install
+name=@bethehero/frontend
+pwd=BeTheHero/frontend/
+script=src/server.js
+port=
+base-route=
+```
+
+### Fields
+- git | You can put a git url from public repo, or put a ssh git, but you need generate a ssh key for this user and put in your account.
+- path | Folder when you can clone your repo.
+- has-env | You can config a .env file? you need put __yes__ or __no__.
+- env-name-from | If you can config a file .env, you can put a original file on __/home/{user}/web/{domain}/__ and put a nome of file here
+- env-name-to | new name of file __.env__, normaly this file is create in pwn field.
+- pre | Execute a bash code before you start a process, the folder default is a __pwd__ field.  
+    - But you can put other subfolder, type: 
+    ```bash
+    pre=cd subfolder && yarn install
+    ```
+- name | Name of process for identify your process in pull and reload button.
+- pwd | Default folder of application, this folder is in __/home/{user}/web/{domain}/public_node/__, 
+    - Ex.: If you create your app on __/home/{user}/web/{domain}/public_node/myapp/__, in this field you need put only:
+    ```bash
+    pwd=myapp/
+    ```
+- script | Referent your folder of __pwd__ field, you need put the path of your script .js.
+    - Ex.: If you create a script in folder __myapp/server/index.js__, and you put in field pwd __pwd=myapp/__, in this field you need put:
+    ```bash
+        script=server/index.js
+    ```
+- port | If you want to make this process visible in this domain, you have to define the port here, configuration, do not forget to use the same port in your code or use the env variable __process.env.PORT__
+- base-route | To complement the port configuration, you have to define the basic route, type, you can config 2 process, first is on route __/__ and second is __/graphql__. In these cases, all access to __{domain}/__ will go to the process defined for this wheel, and access to __{domain}/graphql__ will go to the other process. Don't forget to leave the wheel already configured in your application. If you define basic routes in __/__ in your application, only the one defined here with __/__ will work.

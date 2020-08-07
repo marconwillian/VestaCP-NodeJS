@@ -1,12 +1,10 @@
 server {
-    listen      %ip%:%proxy_ssl_port% ssl;
+    listen      %ip%:%proxy_port%;
     server_name %domain_idn% %alias_idn%;
-    ssl_certificate      %ssl_pem%;
-    ssl_certificate_key  %ssl_key%;
     error_log  /var/log/httpd/domains/%domain%.error.log error;
 
     location / {
-        proxy_pass      https://localhost:%nodejs_web_ssl_port%;
+        proxy_pass      http://localhost:%web_port%;
     }
 
     location /error/ {
@@ -14,7 +12,7 @@ server {
     }
 
     location @fallback {
-        proxy_pass      https://%ip%:8443;
+        proxy_pass      http://%ip%:8080;
     }
 
     location ~ /\.ht    {return 404;}
@@ -23,5 +21,5 @@ server {
     location ~ /\.hg/   {return 404;}
     location ~ /\.bzr/  {return 404;}
 
-    include %home%/%user%/conf/web/snginx.%domain%.conf*;
+    include %home%/%user%/conf/web/nginx.%domain%.conf*;
 }

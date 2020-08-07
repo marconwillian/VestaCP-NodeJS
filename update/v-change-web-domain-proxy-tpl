@@ -46,20 +46,6 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$PROXY'
 is_proxy_template_valid $template
 
 #----------------------------------------------------------#
-#                  NodeJS port config                      #
-#----------------------------------------------------------#
-home_dir="/home/"
-port_conf=${home_dir}${user}"/conf/web/"${domain}".port.conf"
-
-if test -f "$port_conf"; then
-	source $port_conf
-	WEB_PORT=$nodejs_port
-	WEB_SSL_PORT=$nodejs_port
-fi
-#---------------End of NodeJS port config------------------#
-
-
-#----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 

@@ -40,7 +40,7 @@ function copyEnv(){
 
 function preExeculte(){
     if [ "${pre[$1]}" != "" ]; then
-        runuser -l $user -c "cd $public_node/${git_path[$1]} && ${pre[$1]}"
+        runuser -l $user -c "cd $public_node/${pwd_item[$1]} && ${pre[$1]}"
     fi
 }
 
