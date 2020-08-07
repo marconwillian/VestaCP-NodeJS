@@ -1,7 +1,7 @@
 # VestaCPWithNodeJS
 Create custom template for NodeJS Application when using Nginx as reverse proxy on VestaCP with custom port, and deploy from github, with possibilite of .env file personal. For this you don't can modificaste originals bins. But you can modify template for personalize buttons for pull.
 
-## Install Manual
+## Manual Install
 1. Copy bins __[v-pull-node](/bin/v-pull-node)__ and __[v-reload-node](/bin/v-reload-node)__ to /usr/local/vesta/bin
 2.  You need to give permissions to the bins you copied above, run:
 ```bash
