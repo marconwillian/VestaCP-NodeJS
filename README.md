@@ -7,12 +7,12 @@ Create custom template for NodeJS Application when using Nginx as reverse proxy 
 ```bash
 chmod 755 -R /usr/local/vesta/bin/v-pull-node && chmod 755 -R /usr/local/vesta/bin/v-reload-node
 ```
-3. Copy files __[node.tpl](/node.tpl)__, __[node.stpl](/node.stpl)__, __[v-pull-node](/bin/v-pull-node)__ and folder __[node](/node)__ into __/usr/local/vesta/data/templates/web/nginx/__
+3. Copy files __[node.tpl](/model_nginx/node.tpl)__, __[node.stpl](/model_nginx/node.stpl)__, __[node.sh](/model_nginx/node.sh)__ and folder __[node](/model_nginx/node)__ into __/usr/local/vesta/data/templates/web/nginx/__
 4.  You need to give permissions to the models you copied above, run:
 ```bash
 chmod 755 -R /usr/local/vesta/data/templates/web/nginx/node*
 ```
-2. Replace it with __v-change-web-domain-proxy-tpl__ provided in this repo. (I also provided my backup in this repo ___v-change-web-domain-proxy-tpl.old___)
+5. Replace it with __v-change-web-domain-proxy-tpl__ provided in this repo. (I also provided my backup in this repo ___v-change-web-domain-proxy-tpl.old___)
 3. Create file {DOMAIN}.port.conf in domain's conf folder, change {DOMAIN} with your domain
 4. add this line into {DOMAIN}.port.conf, change {PORT} with your desired port
 ```bash
